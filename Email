@@ -1,0 +1,158 @@
+package Resources;
+
+import java.util.Scanner;
+
+public class Email {
+    // Declare instance variables
+    private final String firstname;
+    private final String lastname;
+    private String department;
+    private String email;
+    private String collegeCode;
+    private int enrollmentYear;
+    private final String collegeSuffix = ".edu.in";
+    
+    // Define ANSI escape codes for color formatting
+    public String RESET = "\u001B[0m";
+    public String RED = "\u001B[31m";
+    public String GREEN = "\u001B[32m";
+    public String YELLOW = "\u001B[33m";
+
+    // Constructor to initialize object with first name and last name
+    public Email(String firstname, String lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        // Prompt user for college code, department, and enrollment year
+        this.collegeCode = setCollegeCode();
+        this.department = setDepartment();
+        this.enrollmentYear = setEnrollmentYear();
+        // Generate email address 
+        this.email = generateEmail();
+        
+    }
+    
+    // Constructor to initialize object with specified details
+    public Email(String firstname, String lastname, String department, String collegeCode, int enrollmentYear) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.department = department;
+        this.collegeCode = collegeCode;
+        this.enrollmentYear = enrollmentYear;
+        this.email = generateEmail();
+      
+    }
+
+    // Method to set the college code, ensuring it contains only alphabetic characters
+    private String setCollegeCode() {
+        Scanner scanner = new Scanner(System.in);
+        String code = " ";
+        boolean isValidInput = false;
+
+        while (!isValidInput) {
+            System.out.println("Enter college code : ");
+            code = scanner.nextLine().toUpperCase();
+
+            if (code.matches("[a-zA-Z]+")) { // Check if input contains only alphabetic characters
+                isValidInput = true;
+            } else {
+                System.out.println(RED + "Invalid college code. Please enter a valid code." + RESET);
+            }
+        }
+        return code;
+    }
+
+    // Method to set the department, ensuring it is one of the predefined department codes
+    private String setDepartment() {
+        Scanner scanner = new Scanner(System.in);
+        String depChoice;
+        boolean isValidInput = false;
+
+        // Loop until valid input is received
+        while (!isValidInput) {
+            System.out.println("Department Codes are\n "
+                    + " EEE for Electrical and Electronics Engineering\n "
+                    + " CSE for Computer Science Engineering\n "
+                    + " ECE for Electronics and Communications Engineering\n "
+                    + " IT for Information Technology\n "
+                    + " ME for Mechanical Engineering\n "
+                    + " CE for Civil Engineering\n "
+                    + " Enter department code: ");
+            depChoice = scanner.nextLine().toUpperCase();
+
+            // Validate department code
+            if (isValidDepartment(depChoice)) {
+                isValidInput = true;
+                return depChoice;
+            } else {
+                System.out.println(RED + "Please enter valid department code." + RESET);
+            }
+        }
+        return ""; // Default if no valid input is received
+    }
+
+    // Method to validate department codes
+    private boolean isValidDepartment(String department) {
+        return department.equals("EEE") || department.equals("CSE") || department.equals("ECE") ||
+                department.equals("IT") || department.equals("ME") || department.equals("CE");
+    }
+    
+    // Method to set the enrollment year, ensuring it is a 4-digit number between 1900 and 2024
+    private int setEnrollmentYear() {
+        Scanner scanner = new Scanner(System.in);
+        int year = 0;
+        boolean isValidInput = false;
+        
+        while (!isValidInput) {
+            System.out.println("Enter enrollment year : ");
+            String input = scanner.nextLine();
+            if (input.matches("\\d{4}")) { // Check if input is a 4-digit number
+                year = Integer.parseInt(input);
+                if(year >= 1900 && year <= 2024) {
+                	isValidInput = true;
+                } else {
+                    System.out.println(RED + "Invalid enrollment year. Please enter a valid year." + RESET);
+                }
+            } else {
+                System.out.println(RED + "Invalid input. Please enter a 4-digit number." + RESET);
+            }
+        }
+        return year;
+    }
+
+    // Method to generate email address based on user details
+    private String generateEmail() {
+        if (collegeCode == null || collegeCode.isEmpty() || department == null || department.isEmpty()) {
+            return ""; // Handle the case where necessary details are not provided
+        }
+        if (department.isEmpty()) {
+            return firstname.toLowerCase() + "." + lastname.toLowerCase() + "@" + collegeCode.toLowerCase() + collegeSuffix;
+        } else {
+            return firstname.toLowerCase() + "." + lastname.toLowerCase() + "_" + department.toLowerCase() + enrollmentYear + "@" + collegeCode.toLowerCase() + collegeSuffix;
+        }
+    }
+   
+    // Getter methods for instance variables
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    // Method to display user information
+    public String showInfo() {
+        return YELLOW + "DISPLAY NAME: " + RESET+ GREEN + firstname + " " + lastname +RESET+ "\n" +
+        		YELLOW +"DEPARTMENT: "+RESET +GREEN+ department +RESET+ "\n" +
+        		YELLOW + "ENROLLMENT YEAR : " + RESET +  GREEN+ enrollmentYear + RESET + "\n"+
+        		YELLOW +"COLLEGE EMAIL: "+RESET + GREEN + email + RESET;
+    }
+}
