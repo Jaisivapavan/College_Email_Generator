@@ -1,0 +1,20 @@
+package Resources;
+
+import java.util.Scanner;
+
+public class CollegeEmailGenerator {
+	 public static void main(String[] args) {
+	        Scanner scanner = new Scanner(System.in);
+
+	        System.out.println("Enter first name:");
+	        String firstname = scanner.nextLine();
+
+	        System.out.println("Enter last name:");
+	        String lastname = scanner.nextLine();
+
+	        Email em1 = new Email(firstname, lastname);
+
+	        System.out.println(em1.showInfo());
+	    }
+
+}
